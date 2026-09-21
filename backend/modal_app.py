@@ -152,15 +152,19 @@ class Engine:
         # Stage 2: zero-shot voice clone TTS (Konkani in the enrolled speaker's voice)
         self.f5 = AutoModel.from_pretrained("ai4bharat/IndicF5", trust_remote_code=True).to(self.device)
 
-        # English STT (Konkani ASR = IndicConformer, Stage 3)
+        # English STT
         self.whisper = WhisperModel(
             "small", device=self.device, compute_type="float16" if self.device == "cuda" else "int8"
         )
+        # Konkani STT — AI4Bharat IndicConformer (multilingual conformer, 22 Indic languages)
+        self.kok_asr = AutoModel.from_pretrained(
+            "ai4bharat/indic-conformer-600m-multilingual", trust_remote_code=True
+        ).to(self.device)
 
         os.makedirs(VOICES_DIR, exist_ok=True)
         self.versions = {
             "mt": "indictrans2-1B", "tts": "indic-parler-tts",
-            "clone": "indic-f5", "stt": "whisper-small",
+            "clone": "indic-f5", "stt": "whisper-small", "stt_kok": "indic-conformer-600m",
         }
 
     # ---- core ops ----
@@ -253,18 +257,38 @@ class Engine:
 
     @modal.fastapi_endpoint(method="POST")
     def stt(self, req: SttReq):
-        if req.lang != "en":
-            return {"error": "Konkani ASR (IndicConformer) is added in Stage 3; use lang=en here."}
         raw = base64.b64decode(req.audio_b64)
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".bin", delete=False) as f:
             f.write(raw)
-            path = f.name
+            src = f.name
+        wav_path = src + ".wav"
         try:
-            segments, _ = self.whisper.transcribe(path, language="en")
+            subprocess.run(
+                ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-ac", "1", wav_path],
+                check=True, capture_output=True,
+            )
+            if req.lang == "kok":
+                import torchaudio
+                wav, _sr = torchaudio.load(wav_path)
+                text = None
+                for code in ("kok", "gom"):  # AI4Bharat repos vary between the two Konkani codes
+                    try:
+                        text = self.kok_asr(wav.to(self.device), code, "ctc")
+                        break
+                    except Exception:
+                        continue
+                if text is None:
+                    return {"error": "Konkani decode failed"}
+                return {"text": str(text).strip(), "lang": "kok", "model_version": self.versions["stt_kok"]}
+            segments, _ = self.whisper.transcribe(wav_path, language="en")
             text = " ".join(s.text for s in segments).strip()
+            return {"text": text, "lang": "en", "model_version": self.versions["stt"]}
         finally:
-            os.unlink(path)
-        return {"text": text, "lang": "en", "model_version": self.versions["stt"]}
+            for p in (src, wav_path):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
 
     @modal.fastapi_endpoint(method="POST")
     def corrections(self, req: CorrectionReq):
