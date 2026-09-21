@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_screen"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/drillTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_drill"
+        android:textColor="@color/ink"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:paddingTop="8dp" />
+
+    <TextView
+        android:id="@+id/drillProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white55"
+        android:textSize="13sp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/drillHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white70"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:paddingBottom="16dp" />
+
+    <TextView
+        android:id="@+id/drillEnglish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ink"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.25"
+        android:paddingVertical="20dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReveal"
+        style="@style/Pill.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="54dp"
+        android:text="Reveal the Konkani"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:id="@+id/drillReveal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/card_glass"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/drillKonkani"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ink"
+            android:textSize="20sp"
+            android:lineSpacingMultiplier="1.25" />
+
+        <TextView
+            android:id="@+id/drillKonkaniAlt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:textColor="@color/white80"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drillActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="14dp"
+        android:visibility="gone">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDrillHear"
+            style="@style/Pill.Ghost"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:minHeight="46dp"
+            app:icon="@drawable/ic_volume"
+            android:text="@string/btn_hear"
+            android:textSize="13sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDrillSay"
+            style="@style/Pill.Ghost"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:minHeight="46dp"
+            app:icon="@drawable/ic_mic"
+            android:text="Say it"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/drillScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white70"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:paddingTop="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDrillNext"
+        style="@style/Pill.Ghost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="52dp"
+        android:text="Next"
+        android:textSize="15sp" />
+</LinearLayout>

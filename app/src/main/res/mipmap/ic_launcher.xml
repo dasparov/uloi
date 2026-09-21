@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- legacy (pre-8.0) launcher: black rounded tile + bottle -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M 16,2 L 92,2 Q 106,2 106,16 L 106,92 Q 106,106 92,106 L 16,106 Q 2,106 2,92 L 2,16 Q 2,2 16,2 Z" />
+    <path
+        android:fillColor="#EFE6D8"
+        android:pathData="M 49,26 L 59,26 L 59,40 C 59,46 68,47 68,54 L 68,76 Q 68,82 62,82 L 46,82 Q 40,82 40,76 L 40,54 C 40,47 49,46 49,40 Z" />
+    <path
+        android:fillColor="#D59B32"
+        android:pathData="M 48,19 L 60,19 Q 62,19 62,21 L 62,25 L 46,25 L 46,21 Q 46,19 48,19 Z" />
+    <path
+        android:fillColor="#D59B32"
+        android:pathData="M 45,53 L 63,53 Q 65,53 65,55 L 65,69 Q 65,71 63,71 L 45,71 Q 43,71 43,69 L 43,55 Q 43,53 45,53 Z" />
+    <path
+        android:fillColor="#0B0B0B"
+        android:pathData="M 50,66 A 6.2,6.2 0 1 1 58.6,57.4 A 7.5,7.5 0 0 0 50,66 Z" />
+</vector>

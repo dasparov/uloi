@@ -1,0 +1,24 @@
+# Stage 1 + 2 + 3 backend deps. Modal builds these into the GPU image (see modal_app.py / train.py);
+# this file is for local reference / non-Modal hosting. Pins are a known-good starting set —
+# a first `modal deploy` may need minor tweaks (transformers <-> parler-tts <-> IndicF5 <-> indictrans2).
+modal
+pydantic>=2
+torch==2.4.0
+torchaudio==2.4.0
+transformers==4.44.2
+accelerate
+sentencepiece
+sacremoses
+soundfile
+numpy
+librosa
+vocos
+faster-whisper==1.0.3
+parler-tts @ git+https://github.com/huggingface/parler-tts.git
+IndicTransToolkit @ git+https://github.com/VarunGumma/IndicTransToolkit.git
+IndicF5 @ git+https://github.com/ai4bharat/IndicF5.git
+fastapi[standard]
+# Stage 3 (fine-tuning)
+peft
+datasets
+sacrebleu

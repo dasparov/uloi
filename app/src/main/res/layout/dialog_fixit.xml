@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/fixContext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingBottom="14dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Type the correct Konkani (Bardez / Catholic):"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:paddingBottom="6dp" />
+
+    <EditText
+        android:id="@+id/fixCorrect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="52dp"
+        android:inputType="textMultiLine"
+        android:textSize="18sp"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Or have the Konkani speaker record it — the app plays that recording back as a real Konkani voice."
+        android:textSize="13sp"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fixRecord"
+        style="@style/Pill.Ghost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="52dp"
+        app:icon="@drawable/ic_mic"
+        android:text="Record Konkani voice"
+        android:textSize="15sp" />
+
+    <CheckBox
+        android:id="@+id/fixConsent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="The speaker agrees this may be used to improve Konkani (open dataset)." />
+</LinearLayout>

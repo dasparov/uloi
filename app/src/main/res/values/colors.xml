@@ -1,0 +1,15 @@
+<resources>
+    <!-- Luxe tokens: black chrome, white-ink opacity tiers (no gray text ramp) -->
+    <color name="canvas">#FF000000</color>
+    <color name="ink">#FFFFFFFF</color>
+    <color name="white80">#CCFFFFFF</color>
+    <color name="white70">#B3FFFFFF</color>
+    <color name="white55">#8CFFFFFF</color>
+    <color name="white35">#59FFFFFF</color>
+    <color name="hairline">#1AFFFFFF</color>   <!-- white/10 -->
+    <color name="glass">#0DFFFFFF</color>       <!-- white/5 panel -->
+    <color name="glass_strong">#14FFFFFF</color><!-- white/8 control -->
+    <!-- Atmospheric accents, used sparingly (color arrives via wash, not chrome) -->
+    <color name="amber">#FFD59B32</color>
+    <color name="sage">#FF5B7557</color>
+</resources>

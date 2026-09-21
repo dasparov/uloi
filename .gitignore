@@ -1,0 +1,10 @@
+.gradle/
+build/
+local.properties
+*.apk
+.DS_Store
+.idea/
+.kotlin/
+captures/
+__pycache__/
+*.pyc
