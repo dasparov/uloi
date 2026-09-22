@@ -1,4 +1,12 @@
-# Uloi — Roadmap
+# Alfred — Roadmap
+
+## Recently shipped (2026-09-21 → 22)
+Typed input + editable mishears · Hindi ⇄ Konkani user-side toggle · dual-script equal-size rendering ·
+Practice say-back scoring (Marathi-model + answer biasing + English-fallback detection) · Practice 5
+LEARN → RECAP-from-memory drill · Phrasebook + starter pack · **Clips** soundboard + field recorder
+(tags, English captions, live mic meter, Slow) · cookit atmosphere washes (time-of-day + drift) ·
+luxe UI (Saans/Noto, Material pills, ✕ clears) · Alfred identity (name, icon, splash) ·
+"local speaker" wording sweep · OSS repo + backend Stages 1–3 code-complete (IndicConformer wired).
 
 ## Now → next session: go live on our own models
 1. Add a payment method on Modal (workspace `kapil-das`) — unlocks GPU. ($30/mo free credit still applies.)

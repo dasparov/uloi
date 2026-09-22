@@ -1,6 +1,6 @@
 # Konkani ⇄ English Voice Translator — Architecture & Plan
 
-**Status:** Finalized (v1.0) · Decisions locked (§16) · App shipped (Stage 0, on-device) · Backend Stages 1-3 code-complete (deploy to run) · **Last updated:** 2026-09-21
+**Status:** Finalized (v1.0) · Decisions locked (§16) · App shipped as **Alfred** (Stage 0 + Hindi mode, Clips recorder, practice/recap drills, atmospheres) · Backend Stages 1-3 code-complete incl. Konkani ASR (deploy to run) · **Last updated:** 2026-09-22
 
 > A two-way, turn-based voice translator between **English** and **Konkani** that (a) speaks
 > Konkani back **in the user's own cloned voice**, and (b) **improves over time** from local speakers'
