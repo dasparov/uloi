@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Uzzo</string>
+    <string name="app_name">Alfred</string>
     <string name="btn_kok_to_en">Konkani   \u2192   English</string>
     <string name="btn_en_to_kok">English   \u2192   Konkani</string>
     <string name="label_english">ENGLISH</string>
