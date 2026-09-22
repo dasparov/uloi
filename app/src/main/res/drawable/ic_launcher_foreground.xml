@@ -18,6 +18,14 @@
     <path android:fillColor="#14100E" android:pathData="M 43,48 L 50,48 L 50,50.2 L 43,50.2 Z" />
     <path android:fillColor="#14100E" android:pathData="M 58,48 L 65,48 L 65,50.2 L 58,50.2 Z" />
     <!-- eyes -->
+    <!-- glasses: heavy dark frames, lenses show the eyes -->
+    <path android:fillColor="#14100E" android:pathData="M 42.5,49.5 L 49.5,49.5 Q 51.5,49.5 51.5,51.5 L 51.5,57 Q 51.5,59 49.5,59 L 42.5,59 Q 40.5,59 40.5,57 L 40.5,51.5 Q 40.5,49.5 42.5,49.5 Z" />
+    <path android:fillColor="#14100E" android:pathData="M 58.5,49.5 L 65.5,49.5 Q 67.5,49.5 67.5,51.5 L 67.5,57 Q 67.5,59 65.5,59 L 58.5,59 Q 56.5,59 56.5,57 L 56.5,51.5 Q 56.5,49.5 58.5,49.5 Z" />
+    <path android:fillColor="#14100E" android:pathData="M 51.5,52.3 L 56.5,52.3 L 56.5,54.8 L 51.5,54.8 Z" />
+    <path android:fillColor="#14100E" android:pathData="M 36.5,51.8 L 40.5,52.3 L 40.5,54.6 L 36.5,54.2 Z" />
+    <path android:fillColor="#14100E" android:pathData="M 67.5,52.3 L 71.5,51.8 L 71.5,54.2 L 67.5,54.6 Z" />
+    <path android:fillColor="#C68B5E" android:pathData="M 43.6,51.1 L 48.4,51.1 Q 49.9,51.1 49.9,52.6 L 49.9,55.9 Q 49.9,57.4 48.4,57.4 L 43.6,57.4 Q 42.1,57.4 42.1,55.9 L 42.1,52.6 Q 42.1,51.1 43.6,51.1 Z" />
+    <path android:fillColor="#C68B5E" android:pathData="M 59.6,51.1 L 64.4,51.1 Q 65.9,51.1 65.9,52.6 L 65.9,55.9 Q 65.9,57.4 64.4,57.4 L 59.6,57.4 Q 58.1,57.4 58.1,55.9 L 58.1,52.6 Q 58.1,51.1 59.6,51.1 Z" />
     <path android:fillColor="#14100E" android:pathData="M 44.9,53.5 a 1.7,1.7 0 1 0 3.4,0 a 1.7,1.7 0 1 0 -3.4,0 Z" />
     <path android:fillColor="#14100E" android:pathData="M 59.7,53.5 a 1.7,1.7 0 1 0 3.4,0 a 1.7,1.7 0 1 0 -3.4,0 Z" />
     <!-- mustache -->
@@ -25,7 +33,7 @@
     <!-- smile -->
     <path android:fillColor="#8A5A38" android:pathData="M 49,66.6 Q 54,69.6 59,66.6 Q 54,68.4 49,66.6 Z" />
     <!-- shirt -->
-    <path android:fillColor="#EFE6D8" android:pathData="M 28,108 C 30,88 40,80 54,80 C 68,80 78,88 80,108 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M 28,108 C 30,88 40,80 54,80 C 68,80 78,88 80,108 Z" />
     <!-- amber collar V -->
     <path android:fillColor="#D59B32" android:pathData="M 46,80 L 54,93 L 62,80 L 58,80 L 54,87.5 L 50,80 Z" />
     <!-- open-collar chest -->

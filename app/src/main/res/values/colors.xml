@@ -12,4 +12,6 @@
     <!-- Atmospheric accents, used sparingly (color arrives via wash, not chrome) -->
     <color name="amber">#FFD59B32</color>
     <color name="sage">#FF5B7557</color>
+    <!-- Launcher: warm light canvas so Alfred's dark hair reads -->
+    <color name="icon_bg">#FFEFE2CC</color>
 </resources>
