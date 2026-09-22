@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,20 +9,39 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Record ~30 seconds of your voice (read anything in English is fine). It captures your voice so the app can later speak Konkani in YOUR voice. Cloning activates in Stage 2."
+        android:text="Record ~30 seconds of your voice (read anything in English is fine). It captures your voice so the app can later speak Konkani in YOUR voice. Cloning activates once the backend is live."
         android:textSize="14sp"
         android:paddingBottom="12dp" />
 
-    <Button
-        android:id="@+id/enrollRecord"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="\uD83C\uDFA4  Record" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enrollRecord"
+            style="@style/Pill.Ghost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            app:icon="@drawable/ic_mic"
+            android:text="Record"
+            android:textSize="15sp" />
+
+        <com.example.konkani.RecordingMeter
+            android:id="@+id/enrollMeter"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="34dp"
+            android:layout_marginStart="14dp"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/enrollConsent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="I agree my voice may be stored and used to build my voice model." />
 </LinearLayout>

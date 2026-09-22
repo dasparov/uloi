@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var recordFile: File? = null
     private var onRecordSaved: ((String) -> Unit)? = null
     private var player: MediaPlayer? = null
+    private var activeMeter: RecordingMeter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -604,7 +605,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         etCorrect.setText(ours)
 
         val audioPath = arrayOfNulls<String>(1)
-        btnRecord.setOnClickListener { toggleRecording(btnRecord) { path -> audioPath[0] = path } }
+        val fixMeter = view.findViewById<RecordingMeter>(R.id.fixMeter)
+        btnRecord.setOnClickListener { toggleRecording(btnRecord, fixMeter) { path -> audioPath[0] = path } }
 
         AlertDialog.Builder(this)
             .setTitle("Fix Konkani (Bardez \u00B7 Catholic)")
@@ -652,7 +654,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val cbConsent = view.findViewById<CheckBox>(R.id.enrollConsent)
         val btnRecord = view.findViewById<Button>(R.id.enrollRecord)
         val audioPath = arrayOfNulls<String>(1)
-        btnRecord.setOnClickListener { toggleRecording(btnRecord) { path -> audioPath[0] = path } }
+        val enrollMeter = view.findViewById<RecordingMeter>(R.id.enrollMeter)
+        btnRecord.setOnClickListener { toggleRecording(btnRecord, enrollMeter) { path -> audioPath[0] = path } }
 
         AlertDialog.Builder(this)
             .setTitle("Enroll your voice")
@@ -701,12 +704,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun newRecorder(): MediaRecorder =
         if (Build.VERSION.SDK_INT >= 31) MediaRecorder(this) else MediaRecorder()
 
-    private fun toggleRecording(btn: Button, onSaved: (String) -> Unit) {
+    private fun toggleRecording(btn: Button, meter: RecordingMeter? = null, onSaved: (String) -> Unit) {
         if (recorder == null) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED
             ) {
-                pendingRecordAction = { toggleRecording(btn, onSaved) }
+                pendingRecordAction = { toggleRecording(btn, meter, onSaved) }
                 permLauncher.launch(Manifest.permission.RECORD_AUDIO)
                 return
             }
@@ -722,6 +725,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 recorder = rec
                 recordFile = f
                 onRecordSaved = onSaved
+                activeMeter = meter
+                meter?.start { recorder?.maxAmplitude ?: 0 }
                 btn.text = "Stop"
                 setStatus("Recording\u2026")
             } catch (e: Exception) {
@@ -735,6 +740,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun stopRecordingIfAny() {
+        activeMeter?.stop()
+        activeMeter = null
         val rec = recorder ?: return
         recorder = null
         try { rec.stop() } catch (_: Exception) {}

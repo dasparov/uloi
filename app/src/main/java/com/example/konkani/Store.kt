@@ -53,7 +53,8 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
         readableDatabase.query(
             "phrase_memory",
             arrayOf("english_display", "konkani_text", "konkani_audio_path", "source", "grp"),
-            "english_norm=?", arrayOf(normalize(english)), null, null, null
+            "english_norm=? AND source != 'clip' AND konkani_text != ''",
+            arrayOf(normalize(english)), null, null, null
         ).use { c ->
             return if (c.moveToFirst())
                 Phrase(c.getString(0) ?: english, c.getString(1), c.getString(2), c.getString(3), c.getString(4))
@@ -62,13 +63,18 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
     }
 
     fun upsertPhrase(english: String, konkaniText: String, audioPath: String?, source: String) {
+        val norm = normalize(english)
+        val existingGrp = readableDatabase.rawQuery(
+            "SELECT grp FROM phrase_memory WHERE english_norm=?", arrayOf(norm)
+        ).use { if (it.moveToFirst()) it.getString(0) else null }
         val cv = ContentValues().apply {
-            put("english_norm", normalize(english))
+            put("english_norm", norm)
             put("english_display", english.trim())
             put("konkani_text", konkaniText)
             put("konkani_audio_path", audioPath)
             put("source", source)
             put("updated_at", System.currentTimeMillis())
+            if (existingGrp != null) put("grp", existingGrp)
         }
         writableDatabase.insertWithOnConflict("phrase_memory", null, cv, SQLiteDatabase.CONFLICT_REPLACE)
     }
@@ -90,7 +96,8 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
     }
 
     fun listPhrases(): List<Phrase> = queryPhrases(
-        "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory ORDER BY updated_at DESC"
+        "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory " +
+            "WHERE konkani_text != '' ORDER BY updated_at DESC"
     )
 
     fun randomPhrases(n: Int): List<Phrase> = queryPhrases(
@@ -108,6 +115,20 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
             if (grp.isNullOrBlank()) putNull("grp") else put("grp", grp.trim())
         }
         writableDatabase.update("phrase_memory", cv, "english_norm=?", arrayOf(normalize(english)))
+    }
+
+    /** Add a standalone local-voice clip (not a correction): recording + English caption (+ optional Konkani, tag). */
+    fun addClip(english: String, konkani: String?, audioPath: String, grp: String?) {
+        val cv = ContentValues().apply {
+            put("english_norm", normalize(english))
+            put("english_display", english.trim())
+            put("konkani_text", konkani?.trim().orEmpty())
+            put("konkani_audio_path", audioPath)
+            put("source", "clip")
+            put("updated_at", System.currentTimeMillis())
+            if (grp.isNullOrBlank()) putNull("grp") else put("grp", grp.trim())
+        }
+        writableDatabase.insertWithOnConflict("phrase_memory", null, cv, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
     fun groups(): List<String> {

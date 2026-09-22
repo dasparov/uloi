@@ -7,55 +7,58 @@
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/fixContext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingBottom="14dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Type the correct Konkani (Bardez / Catholic):"
+        android:text="Record a local speaker saying something worth keeping \u2014 no fixing required."
         android:textSize="13sp"
-        android:textStyle="bold"
-        android:paddingBottom="6dp" />
+        android:paddingBottom="10dp" />
 
     <EditText
-        android:id="@+id/fixCorrect"
+        android:id="@+id/acEnglish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="52dp"
-        android:inputType="textMultiLine"
-        android:textSize="18sp"
+        android:hint="Meaning in English (shown as the caption)"
+        android:inputType="text"
+        android:textSize="16sp"
         android:importantForAutofill="no" />
 
-    <TextView
+    <EditText
+        android:id="@+id/acKonkani"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Or have the Konkani speaker record it \u2014 the app plays that recording back as a real local voice."
-        android:textSize="13sp"
-        android:paddingTop="14dp"
-        android:paddingBottom="8dp" />
+        android:hint="Konkani text (optional)"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/acTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tag \u2014 e.g. bazaar, petrol pump (optional)"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:importantForAutofill="no" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/fixRecord"
+            android:id="@+id/acRecord"
             style="@style/Pill.Ghost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="52dp"
+            android:minHeight="50dp"
             app:icon="@drawable/ic_mic"
-            android:text="Record Konkani voice"
+            android:text="Record"
             android:textSize="15sp" />
 
         <com.example.konkani.RecordingMeter
-            android:id="@+id/fixMeter"
+            android:id="@+id/acMeter"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="34dp"
@@ -64,9 +67,9 @@
     </LinearLayout>
 
     <CheckBox
-        android:id="@+id/fixConsent"
+        android:id="@+id/acConsent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="The speaker agrees this may be used to improve Konkani (open dataset)." />
+        android:text="The speaker agrees this voice may be used to improve Konkani (open dataset)." />
 </LinearLayout>
