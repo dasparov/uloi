@@ -34,5 +34,6 @@
 
         <activity android:name=".PhrasebookActivity" android:exported="false" />
         <activity android:name=".DrillActivity" android:exported="false" />
+        <activity android:name=".ClipsActivity" android:exported="false" />
     </application>
 </manifest>

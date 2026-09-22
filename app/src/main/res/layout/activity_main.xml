@@ -1,271 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/bg_screen">
+    android:background="@color/canvas">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/atmoImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:paddingBottom="24dp">
+        android:layout_height="440dp"
+        android:layout_gravity="top"
+        android:scaleType="centerCrop"
+        android:alpha="0.55"
+        android:importantForAccessibility="no"
+        android:src="@drawable/atmo_sunrise" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/ink"
-            android:textSize="27sp"
-            android:letterSpacing="-0.01"
-            android:gravity="center"
-            android:paddingTop="60dp"
-            android:paddingBottom="4dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="440dp"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_atmo_scrim" />
 
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hint_start"
-            android:textColor="@color/white70"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.2"
-            android:paddingBottom="28dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnKonkaniToEnglish"
-            style="@style/Pill.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="58dp"
-            app:icon="@drawable/ic_mic"
-            android:text="@string/btn_kok_to_en"
-            android:textSize="16sp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEnglishToKonkani"
-            style="@style/Pill.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:minHeight="58dp"
-            app:icon="@drawable/ic_volume"
-            android:text="@string/btn_en_to_kok"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="30dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_english"
-                android:textColor="@color/white70"
-                android:textSize="13sp"
-                android:letterSpacing="0.14" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPlayEnglish"
-                style="@style/Pill.Ghost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="42dp"
-                app:icon="@drawable/ic_volume"
-                android:text="@string/btn_hear"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/englishOutput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="64dp"
-            android:padding="16dp"
-            android:background="@drawable/card_glass"
-            android:textColor="@color/ink"
-            android:textColorHint="@color/white35"
-            android:hint="@string/hint_type_english"
-            android:textSize="19sp"
-            android:lineSpacingMultiplier="1.2"
-            android:inputType="text"
-            android:imeOptions="actionGo"
-            android:importantForAutofill="no" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="26dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_konkani"
-                android:textColor="@color/white70"
-                android:textSize="13sp"
-                android:letterSpacing="0.14" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPlayKonkani"
-                style="@style/Pill.Ghost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="42dp"
-                app:icon="@drawable/ic_volume"
-                android:text="@string/btn_hear"
-                android:textSize="13sp" />
-        </LinearLayout>
+    <ScrollView
+        android:id="@+id/rootScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_glass"
-            android:padding="16dp">
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="16dp">
 
-            <EditText
-                android:id="@+id/konkaniOutput"
+            <TextView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="32dp"
-                android:padding="0dp"
-                android:background="@android:color/transparent"
+                android:text="@string/app_name"
+                android:textColor="@color/ink"
+                android:textSize="27sp"
+                android:letterSpacing="-0.01"
+                android:gravity="center"
+                android:paddingTop="60dp"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_start"
+                android:textColor="@color/white70"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingBottom="28dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnKonkaniToEnglish"
+                style="@style/Pill.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="58dp"
+                app:icon="@drawable/ic_mic"
+                android:text="@string/btn_kok_to_en"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnglishToKonkani"
+                style="@style/Pill.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:minHeight="58dp"
+                app:icon="@drawable/ic_volume"
+                android:text="@string/btn_en_to_kok"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="30dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/labelUser"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/label_english"
+                    android:textColor="@color/white70"
+                    android:textSize="13sp"
+                    android:letterSpacing="0.14" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUserLang"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:minWidth="0dp"
+                    android:minHeight="42dp"
+                    android:text="\u0939\u093f\u0902\u0926\u0940"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPlayEnglish"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="42dp"
+                    app:icon="@drawable/ic_volume"
+                    android:text="@string/btn_hear"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/englishOutput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="64dp"
+                android:padding="16dp"
+                android:background="@drawable/card_glass"
                 android:textColor="@color/ink"
                 android:textColorHint="@color/white35"
-                android:hint="@string/hint_type_konkani"
+                android:hint="@string/hint_type_english"
                 android:textSize="19sp"
                 android:lineSpacingMultiplier="1.2"
-                android:inputType="text|textNoSuggestions"
+                android:inputType="text"
                 android:imeOptions="actionGo"
                 android:importantForAutofill="no" />
 
-            <TextView
-                android:id="@+id/konkaniAlt"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="6dp"
-                android:textColor="@color/white80"
-                android:textSize="19sp"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="26dp"
+                android:paddingBottom="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="14dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/label_konkani"
+                    android:textColor="@color/white70"
+                    android:textSize="13sp"
+                    android:letterSpacing="0.14" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPlayKonkani"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="42dp"
+                    app:icon="@drawable/ic_volume"
+                    android:text="@string/btn_hear"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_glass"
+                android:padding="16dp">
+
+                <EditText
+                    android:id="@+id/konkaniOutput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="32dp"
+                    android:padding="0dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/ink"
+                    android:textColorHint="@color/white35"
+                    android:hint="@string/hint_type_konkani"
+                    android:textSize="19sp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:inputType="text|textNoSuggestions"
+                    android:imeOptions="actionGo"
+                    android:importantForAutofill="no" />
+
+                <TextView
+                    android:id="@+id/konkaniAlt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:textColor="@color/white80"
+                    android:textSize="19sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="14dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPractice"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:minHeight="46dp"
+                    app:icon="@drawable/ic_mic"
+                    android:text="@string/btn_practice"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSlow"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="46dp"
+                    android:text="@string/btn_slow"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnScriptToggle"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="46dp"
+                    android:text="Romi"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPractice"
+                android:id="@+id/btnFixIt"
                 style="@style/Pill.Ghost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:minHeight="50dp"
+                app:icon="@drawable/ic_edit"
+                android:text="@string/btn_fixit"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="14dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPhrasebook"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:text="@string/btn_phrasebook"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDrill"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="50dp"
+                    android:text="@string/btn_drill"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClips"
+                    style="@style/Pill.Ghost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="50dp"
+                    app:icon="@drawable/ic_volume"
+                    android:text="@string/btn_clips"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/correctionsCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="22dp"
+                android:paddingBottom="2dp"
+                android:gravity="center"
+                android:textColor="@color/white55"
+                android:textSize="13sp"
+                android:text="Corrections collected: 0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnroll"
+                style="@style/Pill.Ghost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:minHeight="46dp"
                 app:icon="@drawable/ic_mic"
-                android:text="@string/btn_practice"
-                android:textSize="13sp" />
+                android:text="@string/btn_enroll"
+                android:textSize="14sp"
+                android:textColor="@color/white80" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSlow"
-                style="@style/Pill.Ghost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:minHeight="46dp"
-                android:text="@string/btn_slow"
-                android:textSize="13sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnScriptToggle"
-                style="@style/Pill.Ghost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:minHeight="46dp"
-                android:text="Romi"
-                android:textSize="13sp" />
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFixIt"
-            style="@style/Pill.Ghost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:minHeight="50dp"
-            app:icon="@drawable/ic_edit"
-            android:text="@string/btn_fixit"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="14dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPhrasebook"
-                style="@style/Pill.Ghost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:text="@string/btn_phrasebook"
-                android:textSize="14sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDrill"
-                style="@style/Pill.Ghost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:minHeight="50dp"
-                android:text="@string/btn_drill"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/correctionsCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="22dp"
-            android:paddingBottom="2dp"
-            android:gravity="center"
-            android:textColor="@color/white55"
-            android:textSize="13sp"
-            android:text="Corrections collected: 0" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEnroll"
-            style="@style/Pill.Ghost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:minHeight="46dp"
-            app:icon="@drawable/ic_mic"
-            android:text="@string/btn_enroll"
-            android:textSize="14sp"
-            android:textColor="@color/white80" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Uloi</string>
+    <string name="app_name">Uzzo</string>
     <string name="btn_kok_to_en">Konkani   \u2192   English</string>
     <string name="btn_en_to_kok">English   \u2192   Konkani</string>
     <string name="label_english">ENGLISH</string>
     <string name="label_konkani">KONKANI</string>
-    <string name="hint_start">Konkani \u2194 English \u00B7 speak, or type below.</string>
+    <string name="hint_start">Konkani \u2194 English/Hindi \u00B7 speak, or type below.</string>
     <string name="hint_type_english">Type English\u2026</string>
     <string name="hint_type_konkani">Type Konkani\u2026</string>
     <string name="btn_fixit">Fix it</string>
@@ -14,4 +14,5 @@
     <string name="btn_slow">Slow</string>
     <string name="btn_phrasebook">Phrasebook</string>
     <string name="btn_drill">Practice 5</string>
+    <string name="btn_clips">Clips</string>
 </resources>

@@ -6,33 +6,35 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.util.UUID
 
-/** A corrected/saved phrase from phrase memory. */
+/** A saved/corrected phrase from phrase memory. */
 data class Phrase(
     val english: String,
     val konkaniText: String,
     val nativeAudioPath: String?,
-    val source: String
+    val source: String,
+    val grp: String? = null
 )
 
 /**
  * On-device data plane (mirrors ARCHITECTURE.md §6 until the cloud backend is live).
- * v2: phrase_memory carries the display English (original casing) so the Phrasebook/drill can
- * show real sentences, not normalized keys. Upgrades preserve corrections (training data).
+ * v2: display English for the Phrasebook/drill.
+ * v3: corrections.src_lang (user side may be English or Hindi) + phrase_memory.grp
+ *     (soundboard groups like "bazaar", "petrol pump"). Upgrades preserve data.
  */
-class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 2) {
+class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE phrase_memory(" +
                 "english_norm TEXT PRIMARY KEY, english_display TEXT, konkani_text TEXT NOT NULL, " +
-                "konkani_audio_path TEXT, source TEXT NOT NULL, updated_at INTEGER NOT NULL)"
+                "konkani_audio_path TEXT, source TEXT NOT NULL, updated_at INTEGER NOT NULL, grp TEXT)"
         )
         db.execSQL(
             "CREATE TABLE corrections(" +
                 "correction_id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, " +
                 "english_source TEXT NOT NULL, our_konkani_text TEXT, native_audio_path TEXT, " +
                 "native_confirmed_text TEXT, region TEXT, dialect TEXT, script TEXT, " +
-                "consent INTEGER NOT NULL, status TEXT NOT NULL)"
+                "consent INTEGER NOT NULL, status TEXT NOT NULL, src_lang TEXT DEFAULT 'en')"
         )
     }
 
@@ -41,16 +43,20 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 2)
             db.execSQL("ALTER TABLE phrase_memory ADD COLUMN english_display TEXT")
             db.execSQL("UPDATE phrase_memory SET english_display = english_norm WHERE english_display IS NULL")
         }
+        if (oldV < 3) {
+            db.execSQL("ALTER TABLE corrections ADD COLUMN src_lang TEXT DEFAULT 'en'")
+            db.execSQL("ALTER TABLE phrase_memory ADD COLUMN grp TEXT")
+        }
     }
 
     fun lookupPhrase(english: String): Phrase? {
         readableDatabase.query(
             "phrase_memory",
-            arrayOf("english_display", "konkani_text", "konkani_audio_path", "source"),
+            arrayOf("english_display", "konkani_text", "konkani_audio_path", "source", "grp"),
             "english_norm=?", arrayOf(normalize(english)), null, null, null
         ).use { c ->
             return if (c.moveToFirst())
-                Phrase(c.getString(0) ?: english, c.getString(1), c.getString(2), c.getString(3))
+                Phrase(c.getString(0) ?: english, c.getString(1), c.getString(2), c.getString(3), c.getString(4))
             else null
         }
     }
@@ -83,15 +89,40 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 2)
         }
     }
 
-    fun listPhrases(): List<Phrase> = queryPhrases("SELECT english_display, konkani_text, konkani_audio_path, source FROM phrase_memory ORDER BY updated_at DESC")
+    fun listPhrases(): List<Phrase> = queryPhrases(
+        "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory ORDER BY updated_at DESC"
+    )
 
-    fun randomPhrases(n: Int): List<Phrase> = queryPhrases("SELECT english_display, konkani_text, konkani_audio_path, source FROM phrase_memory ORDER BY RANDOM() LIMIT $n")
+    fun randomPhrases(n: Int): List<Phrase> = queryPhrases(
+        "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory ORDER BY RANDOM() LIMIT $n"
+    )
+
+    /** Soundboard: phrases that carry a native recording, grouped first, newest first within a group. */
+    fun listClips(): List<Phrase> = queryPhrases(
+        "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory " +
+            "WHERE konkani_audio_path IS NOT NULL ORDER BY grp IS NULL, grp, updated_at DESC"
+    )
+
+    fun setGroup(english: String, grp: String?) {
+        val cv = ContentValues().apply {
+            if (grp.isNullOrBlank()) putNull("grp") else put("grp", grp.trim())
+        }
+        writableDatabase.update("phrase_memory", cv, "english_norm=?", arrayOf(normalize(english)))
+    }
+
+    fun groups(): List<String> {
+        val out = ArrayList<String>()
+        readableDatabase.rawQuery(
+            "SELECT DISTINCT grp FROM phrase_memory WHERE grp IS NOT NULL AND grp != '' ORDER BY grp", null
+        ).use { c -> while (c.moveToNext()) out.add(c.getString(0)) }
+        return out
+    }
 
     private fun queryPhrases(sql: String): List<Phrase> {
         val out = ArrayList<Phrase>()
         readableDatabase.rawQuery(sql, null).use { c ->
             while (c.moveToNext()) {
-                out.add(Phrase(c.getString(0) ?: "", c.getString(1), c.getString(2), c.getString(3)))
+                out.add(Phrase(c.getString(0) ?: "", c.getString(1), c.getString(2), c.getString(3), c.getString(4)))
             }
         }
         return out
@@ -100,7 +131,8 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 2)
     /** Store a native correction AND update phrase memory so it replays instantly. */
     fun insertCorrection(
         englishSource: String, ourKonkani: String?, nativeAudioPath: String?,
-        confirmedText: String?, region: String, dialect: String, script: String, consent: Boolean
+        confirmedText: String?, region: String, dialect: String, script: String, consent: Boolean,
+        srcLang: String = "en"
     ): String {
         val id = "cor_" + UUID.randomUUID().toString().take(8)
         val cv = ContentValues().apply {
@@ -115,10 +147,11 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 2)
             put("script", script)
             put("consent", if (consent) 1 else 0)
             put("status", "new")
+            put("src_lang", srcLang)
         }
         writableDatabase.insert("corrections", null, cv)
         val text = confirmedText?.takeIf { it.isNotBlank() }
-        if (text != null || nativeAudioPath != null) {
+        if (srcLang == "en" && (text != null || nativeAudioPath != null)) {
             upsertPhrase(englishSource, text ?: (ourKonkani ?: ""), nativeAudioPath, "native_correction")
         }
         return id

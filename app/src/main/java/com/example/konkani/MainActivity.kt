@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -64,6 +65,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var btnPractice: Button
     private lateinit var btnSlow: Button
     private lateinit var btnScriptToggle: Button
+    private lateinit var btnUserLang: Button
+    private lateinit var labelUser: TextView
+    private lateinit var atmoImage: ImageView
+    // Cookit atmosphere washes (owner's photo-gradients): sunrise / sky / bloom / foliage
+    private val atmospheres = intArrayOf(
+        R.drawable.atmo_sunrise, R.drawable.atmo_sky, R.drawable.atmo_bloom, R.drawable.atmo_foliage
+    )
+    private var atmoIdx = 0
 
     private val io = Executors.newSingleThreadExecutor()
     private val main = Handler(Looper.getMainLooper())
@@ -76,6 +85,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var lastEnglish: String? = null
     private var showRoman = true              // Bardez/Catholic -> Romi-first
     private var slow = false
+    private var userLang = "en"               // user's side: "en" or "hi" (both pair with Konkani)
 
     private lateinit var speechLauncher: ActivityResultLauncher<Intent>
     private lateinit var permLauncher: ActivityResultLauncher<String>
@@ -184,7 +194,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         findViewById<Button>(R.id.btnEnglishToKonkani).setOnClickListener {
             mode = Mode.EN_TO_KOK
-            startListening("en-IN", "Listening in English\u2026")
+            startListening(if (userLang == "hi") "hi-IN" else "en-IN", "Listening in ${userName()}\u2026")
         }
         btnScriptToggle.setOnClickListener {
             showRoman = !showRoman
@@ -203,14 +213,36 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         findViewById<Button>(R.id.btnDrill).setOnClickListener {
             startActivity(Intent(this, DrillActivity::class.java))
         }
+        findViewById<Button>(R.id.btnClips).setOnClickListener {
+            startActivity(Intent(this, ClipsActivity::class.java))
+        }
+        atmoImage = findViewById(R.id.atmoImage)
+        atmoIdx = when (java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)) {
+            in 5..10 -> 0    // morning: sunrise
+            in 11..16 -> 1   // day: sky
+            in 17..20 -> 2   // evening: bloom
+            else -> 3        // night: foliage
+        }
+        atmoImage.setImageResource(atmospheres[atmoIdx])
         findViewById<Button>(R.id.btnEnroll).setOnClickListener { showEnrollDialog() }
+        btnUserLang = findViewById(R.id.btnUserLang)
+        labelUser = findViewById(R.id.labelUser)
+        userLang = getSharedPreferences("konkani", Context.MODE_PRIVATE)
+            .getString("user_lang", "en") ?: "en"
+        btnUserLang.setOnClickListener {
+            userLang = if (userLang == "en") "hi" else "en"
+            getSharedPreferences("konkani", Context.MODE_PRIVATE).edit()
+                .putString("user_lang", userLang).apply()
+            updateUserLangUi()
+        }
         findViewById<Button>(R.id.btnPlayEnglish).setOnClickListener {
-            speak(englishOutput.text.toString(), Locale.ENGLISH, manual = true)
+            speak(englishOutput.text.toString(), userLocale(), manual = true)
         }
         findViewById<Button>(R.id.btnPlayKonkani).setOnClickListener { playKonkani(manual = true) }
 
         setActionsEnabled(fix = false, practice = false)
         updateScriptToggleLabel()
+        updateUserLangUi()
         refreshCount()
     }
 
@@ -291,11 +323,27 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         runKokToEn(t)
     }
 
+    private fun userLocale(): Locale = if (userLang == "hi") Locale("hi", "IN") else Locale.ENGLISH
+
+    private fun userName(): String = if (userLang == "hi") "\u0939\u093f\u0902\u0926\u0940" else "English"
+
+    /** Applies the chosen user-side language (English/Hindi) across labels, hints, and buttons. */
+    private fun updateUserLangUi() {
+        labelUser.text = if (userLang == "hi") "\u0939\u093f\u0902\u0926\u0940" else getString(R.string.label_english)
+        labelUser.typeface = if (userLang == "hi") Fonts.devanagari(this) else Fonts.latin(this)
+        btnUserLang.text = if (userLang == "hi") "English" else "\u0939\u093f\u0902\u0926\u0940"
+        englishOutput.hint = if (userLang == "hi")
+            "\u0939\u093f\u0902\u0926\u0940 \u092e\u0947\u0902 \u091f\u093e\u0907\u092a \u0915\u0930\u0947\u0902\u2026"
+        else getString(R.string.hint_type_english)
+        findViewById<Button>(R.id.btnKonkaniToEnglish).text = "Konkani   \u2192   ${userName()}"
+        findViewById<Button>(R.id.btnEnglishToKonkani).text = "${userName()}   \u2192   Konkani"
+    }
+
     // ---------- the two flows (mic, typed, phrasebook all share these) ----------
     private fun runEnToKok(text: String) {
         lastEnglish = text
         englishOutput.setText(text)
-        val hit = store.lookupPhrase(text)
+        val hit = if (userLang == "en") store.lookupPhrase(text) else null
         if (hit != null) {
             lastKonkani = hit.konkaniText
             lastKonkaniAudioPath = hit.nativeAudioPath
@@ -305,12 +353,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             setStatus("From memory ($src)$heard \u2713")
             setActionsEnabled(fix = true, practice = true)
             playKonkani(manual = false)
-        } else if (cloud != null) {
+        } else if (cloud != null && userLang == "en") {
             setStatus("Translating to Konkani (your models)\u2026")
             speakViaCloud(text)
         } else {
             setStatus("Translating to Konkani\u2026")
-            translateAsync(text, "en", "kok") { kok ->
+            translateAsync(text, userLang, "kok") { kok ->
                 lastKonkani = kok
                 lastKonkaniAudioPath = null
                 renderKonkani()
@@ -326,13 +374,23 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         lastKonkaniAudioPath = null
         renderKonkani()
         setActionsEnabled(fix = false, practice = true)
-        setStatus("Translating to English\u2026")
-        translateAsync(text, "kok", "en") { en ->
-            englishOutput.setText(en)
-            lastEnglish = en
+        setStatus("Translating\u2026")
+        translateAsync(text, "kok", userLang) { out ->
+            englishOutput.setText(out)
+            lastEnglish = out
             setStatus("Done. Tap Hear to replay.")
-            speak(en, Locale.ENGLISH)
+            speak(out, userLocale())
+            advanceAtmosphere()
         }
+    }
+
+    /** Break the monotony: time-of-day wash at launch; each finished translation drifts onward. */
+    private fun advanceAtmosphere() {
+        atmoIdx = (atmoIdx + 1) % atmospheres.size
+        atmoImage.animate().alpha(0f).setDuration(450).withEndAction {
+            atmoImage.setImageResource(atmospheres[atmoIdx])
+            atmoImage.animate().alpha(0.55f).setDuration(650).start()
+        }.start()
     }
 
     private fun translateAsync(text: String, src: String, tgt: String, onResult: (String) -> Unit) {
@@ -459,6 +517,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // ---------- Konkani audio: native recording first, else TTS ----------
     private fun playKonkani(manual: Boolean) {
+        if (!manual) advanceAtmosphere()
         val path = lastKonkaniAudioPath
         if (path != null && File(path).exists()) {
             playAudioFile(path)
@@ -570,7 +629,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     region = "Bardez",
                     dialect = "Catholic",
                     script = if (showRoman) "Roman" else "Devanagari",
-                    consent = true
+                    consent = true,
+                    srcLang = userLang
                 )
                 refreshCount()
                 if (confirmed.isNotEmpty()) {
