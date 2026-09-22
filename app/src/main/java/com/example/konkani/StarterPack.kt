@@ -2,8 +2,8 @@ package com.example.konkani
 
 /**
  * Day-1 phrasebook seed — everyday Bardez/Catholic Konkani (Devanagari canonical; the UI shows
- * Romi via transliteration). Marked source="starter" and NEVER overwrites a saved/native entry.
- * These are best-effort seeds: natives verify/replace them through Fix-it (the flywheel).
+ * Romi via transliteration). Marked source="starter" and NEVER overwrites a saved/corrected entry.
+ * These are best-effort seeds: local speakers verify/replace them through Fix-it (the flywheel).
  */
 object StarterPack {
     val phrases: List<Pair<String, String>> = listOf(

@@ -10,7 +10,7 @@ Stage 2: VOICE CLONING — IndicF5 (F5-TTS, zero-shot) speaks the Konkani in the
   POST /speak        English text -> Konkani text + Konkani audio (in voice_id's voice if enrolled)
   POST /translate    text <-> text (IndicTrans2, en<->gom_Deva)
   POST /stt          English speech -> text (faster-whisper)
-  POST /corrections  store a native correction (audio + text) into the data Volume (flywheel sink)
+  POST /corrections  store a speaker correction (audio + text) into the data Volume (flywheel sink)
   POST /enroll       store a user's voice reference + transcript (for Stage 2 cloning)
   GET  /health       liveness + loaded model versions
 

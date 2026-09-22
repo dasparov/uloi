@@ -28,7 +28,7 @@
         android:id="@+id/clipsHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Play a native voice to anyone \u2014 the caption tells you what it says."
+        android:text="Play a local voice to anyone \u2014 the caption tells you what it says."
         android:textColor="@color/white35"
         android:textSize="12sp"
         android:gravity="center"

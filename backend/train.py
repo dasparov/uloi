@@ -1,5 +1,5 @@
 """
-Konkani backend — Stage 3: self-improvement (fine-tune from native corrections).
+Konkani backend — Stage 3: self-improvement (fine-tune from speaker corrections).
 
 Scheduled Modal jobs turn the corrections the app collects (`konkani-data/corrections.jsonl` + audio)
 into training data and fine-tune our models, gated by an eval check so a worse model never ships

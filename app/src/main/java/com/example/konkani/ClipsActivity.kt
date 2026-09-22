@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 
 /**
- * Clips — the soundboard. Every phrase a native recorded (via Fix it) becomes a playable card:
- * English caption + Konkani, tap to PLAY the native's actual voice to someone, hold to file it
+ * Clips — the soundboard. Every phrase a local speaker recorded (via Fix it) becomes a playable card:
+ * English caption + Konkani, tap to PLAY their actual voice to someone, hold to file it
  * under a group ("bazaar", "petrol pump", ...). Grouped list, ungrouped last.
  */
 class ClipsActivity : AppCompatActivity() {
@@ -44,9 +44,9 @@ class ClipsActivity : AppCompatActivity() {
         val sub = findViewById<TextView>(R.id.clipsCount)
         sub.typeface = Fonts.latin(this)
         sub.text = if (clips.isEmpty())
-            "No clips yet \u2014 have a native record via Fix it \u2192 Record."
+            "No clips yet \u2014 ask a Konkani speaker to record via Fix it \u2192 Record."
         else
-            "${clips.size} native clips \u00B7 tap to play \u00B7 hold to group"
+            "${clips.size} local-voice clips \u00B7 tap to play \u00B7 hold to group"
         list.adapter = object : BaseAdapter() {
             override fun getCount() = clips.size
             override fun getItem(i: Int) = clips[i]

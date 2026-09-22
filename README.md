@@ -2,14 +2,14 @@
 
 **Konkani ⇄ English voice translator + tutor**, built for Goan (Bardez, Catholic/Romi-leaning) Konkani —
 a low-resource language the big platforms barely serve. Uloi (*उलय* — "speak!") is both an interpreter
-and a learning app, and it **gets better as native speakers correct it**.
+and a learning app, and it **gets better as local Konkani speakers correct it**.
 
 ## What it does
 - **Speak or type** either language; Konkani renders in **both scripts** (Romi + Devanagari) at equal size.
-- **Hear** buttons + **Slow** mode; Konkani audio prefers a **native speaker's recording** when one exists.
-- **Fix it** — a native corrects any translation (typed and/or recorded, consent-gated). Corrections
+- **Hear** buttons + **Slow** mode; Konkani audio prefers a **local speaker's recording** when one exists.
+- **Fix it** — a Konkani speaker corrects any translation (typed and/or recorded, consent-gated). Corrections
   replay instantly (phrase memory) and become training data (the flywheel).
-- **Phrasebook** — starter pack of everyday Bardez phrases + everything natives have corrected.
+- **Phrasebook** — starter pack of everyday Bardez phrases + everything local speakers have corrected.
 - **Practice** — say it back, scored by speech recognition; **Practice 5** drill with a learn pass and a
   **recap-from-memory** pass.
 - **Enroll my voice** — records a reference clip; with the backend deployed, Konkani speaks **in your own

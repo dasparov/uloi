@@ -3,7 +3,7 @@
 Our own Konkani brain behind the ARCHITECTURE.md §5 API, on **serverless GPU** (scale-to-zero):
 - **Stage 1** — MT (**IndicTrans2**) + generic TTS (**Indic-Parler-TTS**) + English STT (**faster-whisper**).
 - **Stage 2** — **voice cloning** (**IndicF5**, zero-shot): Konkani in the enrolled user's voice.
-- **Stage 3** — **self-improvement**: scheduled jobs fine-tune from native corrections behind an eval gate.
+- **Stage 3** — **self-improvement**: scheduled jobs fine-tune from speaker corrections behind an eval gate.
 
 Replaces Google, speaks in the user's voice, and gets better as corrections come in.
 
@@ -43,7 +43,7 @@ curl -X POST $BASE-speak.modal.run -H 'content-type: application/json' \
 | POST | `/enroll` | store a voice clip; Whisper drafts the reference transcript → returns `voice_id` |
 | POST | `/translate` | text ↔ text, `en`↔`kok` |
 | POST | `/stt` | English speech → text |
-| POST | `/corrections` | store a native correction (audio + text) → training sink |
+| POST | `/corrections` | store a speaker correction (audio + text) → training sink |
 | GET | `/health` | liveness + model versions |
 
 ## Stage 3 jobs (`train.py`)

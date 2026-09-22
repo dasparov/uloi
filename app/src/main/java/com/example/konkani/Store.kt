@@ -73,7 +73,7 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
         writableDatabase.insertWithOnConflict("phrase_memory", null, cv, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
-    /** Starter entries never overwrite anything the user or a native already saved. */
+    /** Starter entries never overwrite anything the user or a local speaker already saved. */
     fun seedStarter(pack: List<Pair<String, String>>) {
         val db = writableDatabase
         for ((en, kok) in pack) {
@@ -97,7 +97,7 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
         "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory ORDER BY RANDOM() LIMIT $n"
     )
 
-    /** Soundboard: phrases that carry a native recording, grouped first, newest first within a group. */
+    /** Soundboard: phrases that carry a speaker's recording, grouped first, newest first within a group. */
     fun listClips(): List<Phrase> = queryPhrases(
         "SELECT english_display, konkani_text, konkani_audio_path, source, grp FROM phrase_memory " +
             "WHERE konkani_audio_path IS NOT NULL ORDER BY grp IS NULL, grp, updated_at DESC"
@@ -128,7 +128,7 @@ class Store(context: Context) : SQLiteOpenHelper(context, "konkani.db", null, 3)
         return out
     }
 
-    /** Store a native correction AND update phrase memory so it replays instantly. */
+    /** Store a local speaker's correction AND update phrase memory so it replays instantly. */
     fun insertCorrection(
         englishSource: String, ourKonkani: String?, nativeAudioPath: String?,
         confirmedText: String?, region: String, dialect: String, script: String, consent: Boolean,

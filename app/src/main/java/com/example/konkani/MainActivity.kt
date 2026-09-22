@@ -42,7 +42,7 @@ import java.util.concurrent.Executors
 /**
  * Interpreter + tutor (Stage 0, luxe skin). Speak OR type either language; results render in both
  * Konkani scripts; Practice mode scores your pronunciation via Konkani STT; Phrasebook/Drill turn
- * the flywheel data (corrections + starter pack) into lessons. Konkani audio prefers a native's
+ * the flywheel data (corrections + starter pack) into lessons. Konkani audio prefers a local
  * recording, then TTS; Slow toggle stretches both. Cloud seam (BASE_URL) stays dormant until set.
  */
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -347,8 +347,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             lastKonkani = hit.konkaniText
             lastKonkaniAudioPath = hit.nativeAudioPath
             renderKonkani()
-            val heard = if (hit.nativeAudioPath != null) " \u00B7 native voice" else ""
-            val src = if (hit.source == "starter") "phrasebook" else "a native correction"
+            val heard = if (hit.nativeAudioPath != null) " \u00B7 local voice" else ""
+            val src = if (hit.source == "starter") "phrasebook" else "a local speaker's correction"
             setStatus("From memory ($src)$heard \u2713")
             setActionsEnabled(fix = true, practice = true)
             playKonkani(manual = false)
@@ -514,7 +514,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         btnScriptToggle.text = if (showRoman) "\u0926\u0947\u0935\u0928\u093E\u0917\u0930\u0940" else "Romi"
     }
 
-    // ---------- Konkani audio: native recording first, else TTS ----------
+    // ---------- Konkani audio: the speaker's recording first, else TTS ----------
     private fun playKonkani(manual: Boolean) {
         if (!manual) advanceAtmosphere()
         val path = lastKonkaniAudioPath
@@ -540,7 +540,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 try { p.playbackParams = p.playbackParams.setSpeed(0.72f) } catch (_: Exception) {}
             }
             player = p
-            setStatus("Playing the native recording\u2026")
+            setStatus("Playing the local voice\u2026")
         } catch (e: Exception) {
             setStatus("Couldn't play recording: ${e.message}")
         }

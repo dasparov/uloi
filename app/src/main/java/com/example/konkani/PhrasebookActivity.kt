@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * The flywheel data as a lesson book: every starter/saved/native-corrected phrase, browsable.
+ * The flywheel data as a lesson book: every starter/saved/speaker-corrected phrase, browsable.
  * Tapping a row returns it to the main screen (filled in, ready to Hear / Practice / Fix).
  */
 class PhrasebookActivity : AppCompatActivity() {
@@ -29,8 +29,8 @@ class PhrasebookActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.pbTitle).typeface = Fonts.latinMedium(this)
         val sub = findViewById<TextView>(R.id.pbCount)
         sub.typeface = Fonts.latin(this)
-        val native = phrases.count { it.source == "native_correction" }
-        sub.text = "${phrases.size} phrases \u00B7 $native native-corrected"
+        val corrected = phrases.count { it.source == "native_correction" }
+        sub.text = "${phrases.size} phrases \u00B7 $corrected speaker-corrected"
 
         val list = findViewById<ListView>(R.id.phraseList)
         list.adapter = object : BaseAdapter() {
@@ -47,7 +47,7 @@ class PhrasebookActivity : AppCompatActivity() {
                 en.text = p.english
                 en.typeface = Fonts.latin(this@PhrasebookActivity)
                 tag.text = when (p.source) {
-                    "native_correction" -> "\u2713 native"
+                    "native_correction" -> "\u2713 local"
                     "starter" -> "starter"
                     else -> "saved"
                 }

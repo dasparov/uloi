@@ -3,7 +3,7 @@
 **Status:** Finalized (v1.0) · Decisions locked (§16) · App shipped (Stage 0, on-device) · Backend Stages 1-3 code-complete (deploy to run) · **Last updated:** 2026-09-21
 
 > A two-way, turn-based voice translator between **English** and **Konkani** that (a) speaks
-> Konkani back **in the user's own cloned voice**, and (b) **improves over time** from native-speaker
+> Konkani back **in the user's own cloned voice**, and (b) **improves over time** from local speakers'
 > corrections. Fully **open-source models**, self-hosted on **serverless cloud GPU**. No per-minute
 > vendor fees; every component is one we can retrain.
 
@@ -14,7 +14,7 @@
 **Goals**
 - Konkani speech → English text (+ optional English audio) — user understands the other person.
 - English speech → **Konkani audio in the user's voice** — the other person hears "you" speaking Konkani.
-- A **native-correction loop**: when Konkani is wrong, a native speaker says it correctly; we store it,
+- A **correction loop**: when Konkani is wrong, a local speaker says it correctly; we store it,
   reuse it instantly, and periodically **fine-tune** our models on it. More corrections → better Konkani.
 - Everything runs on **open-source, self-hostable, fine-tunable** models.
 
@@ -35,7 +35,7 @@
 `English speech → STT(en) → English text → MT(en→kok) → Konkani text → TTS+voice-clone → Konkani audio in YOUR voice`
 
 **C. Correction** (on any Konkani output)
-`Tap "👎 Fix it" → native speaks correct Konkani → capture {english source, our konkani, native audio, confirmed text} → phrase memory (instant) + training queue (batch)`
+`Tap "👎 Fix it" → a local speaker says the correct Konkani → capture {english source, our konkani, speaker audio, confirmed text} → phrase memory (instant) + training queue (batch)`
 
 **One-time enrollment:** user records ~30 s of their voice (reading **English** is fine — timbre is
 language-independent) → produces a `voice_id` used for all Konkani output.
@@ -91,10 +91,10 @@ graph TD
 | Role | Model (primary) | HF/repo | License | Fine-tune? |
 |---|---|---|---|---|
 | English STT | on-device Google STT **or** `faster-whisper` large-v3 | openai/whisper | MIT | (English fine, rarely needed) |
-| Konkani STT (corrections, reverse dir) | **IndicConformer** (kok) | AI4Bharat/IndicConformerASR | permissive | ✅ on native audio |
+| Konkani STT (corrections, reverse dir) | **IndicConformer** (kok) | AI4Bharat/IndicConformerASR | permissive | ✅ on speaker audio |
 | MT En⇄Kok | **IndicTrans2** 1B (or 200M distilled) | ai4bharat/indictrans2-* | MIT | ✅ LoRA on corrected pairs |
 | Konkani TTS + voice clone (**preferred**) | **IndicF5** (F5-TTS, zero-shot voice clone) | AI4Bharat/IndicF5 | check | ✅ + clones from ref clip |
-| Konkani TTS (fallback) | **Indic Parler-TTS** | ai4bharat/indic-parler-tts | Apache-2.0 | ✅ on native audio |
+| Konkani TTS (fallback) | **Indic Parler-TTS** | ai4bharat/indic-parler-tts | Apache-2.0 | ✅ on speaker audio |
 | Voice conversion (fallback, 2-stage) | **seed-vc** (or RVC) | Plachtaa/seed-vc | check | zero-shot ref |
 | Bootstrap training data | **IndicVoices-R** (1,704 h, incl. Konkani) | AI4Bharat/IndicVoices-R | CC | dataset |
 
@@ -152,13 +152,13 @@ All audio is base64 or `multipart/form-data`; responses reference stored audio b
 -> { "voice_id": "vp_abc123" }
 ```
 
-### `POST /v1/corrections` — submit a native-speaker correction
+### `POST /v1/corrections` — submit a local speaker's correction
 ```jsonc
 { "request_id": "utt_555",              // the utterance being fixed (nullable)
   "english_source": "Where is the hospital?",
   "our_konkani_text": "…wrong…",
   "native_audio": "<b64>",              // REQUIRED — used for TTS/STT training
-  "native_confirmed_text": "हॉस्पिटल खंय आसा?", // drafted by STT, native-verified (nullable)
+  "native_confirmed_text": "हॉस्पिटल खंय आसा?", // drafted by STT, speaker-verified (nullable)
   "corrector": { "region": "Bardez", "dialect": "Bardeshi", "script": "Devanagari", "consent": true } }
 -> { "correction_id": "cor_222", "phrase_memory_updated": true }
 ```
@@ -188,7 +188,7 @@ corrections(correction_id PK, request_id FK NULL, created_at,
   quality jsonb)                                   -- snr, stt_agreement, duration…
 
 phrase_memory(id PK, english_norm UNIQUE, konkani_text,
-  konkani_audio_uri NULL,                          -- native audio preferred for playback
+  konkani_audio_uri NULL,                          -- speaker audio preferred for playback
   source,                                          -- 'native_correction'|'manual'
   confidence, updated_at)
 
@@ -202,7 +202,7 @@ dataset_snapshots(snapshot_id PK, component, correction_ids jsonb, created_at)
 ```
 r2://voice-profiles/<voice_id>/ref.wav
 r2://utterances/<request_id>/{source,output}.opus
-r2://corrections/<correction_id>/native.wav
+r2://corrections/<correction_id>/speaker.wav
 r2://datasets/<snapshot_id>/…            # materialized training sets
 r2://models/<component>/<version>/…      # weights (or a model registry / HF private repo)
 ```
@@ -215,8 +215,8 @@ Purpose: a correction should feel like it took effect **immediately**, even thou
 
 - **Key:** `english_norm` = lowercase, trim, strip punctuation; optional embedding for fuzzy match
   (sentence-transformers) so near-identical English hits the same entry.
-- **On `/speak` / `/translate`:** look up phrase memory first. Hit → return the **native-confirmed Konkani
-  text** and, if present, **play the native's actual audio** (or re-clone it to the user's voice). Miss →
+- **On `/speak` / `/translate`:** look up phrase memory first. Hit → return the **speaker-confirmed Konkani
+  text** and, if present, **play the speaker's actual audio** (or re-clone it to the user's voice). Miss →
   fall through to IndicTrans2 + TTS.
 - **On `/corrections`:** upsert the entry synchronously → next identical/near request is correct instantly.
 - **App-side cache:** sync top-N phrases to the phone so corrected phrases work **offline** too.
@@ -245,12 +245,12 @@ graph LR
 - **TTS:** `(native_confirmed_text → native_audio)` → fine-tune IndicF5/Parler (pronunciation, prosody, multi-speaker).
 - **STT:** `(native_audio → native_confirmed_text)` → fine-tune IndicConformer.
 
-**Auto-verification (cheap gate before training):** accept a correction if native audio SNR is adequate,
-duration is sane, and an independent STT transcription agrees with `native_confirmed_text` above a threshold;
+**Auto-verification (cheap gate before training):** accept a correction if the recording's SNR is adequate,
+duration is sane, and an independent STT transcription agrees with the confirmed text above a threshold;
 else route to a light human review queue. Prevents garbage-in.
 
 **Eval gate (critical — never ship a worse model)** — reserve a held-out slice of corrections:
-- MT → **chrF/BLEU** vs native references.
+- MT → **chrF/BLEU** vs speaker references.
 - TTS → intelligibility via **STT round-trip WER** + speaker-similarity for the clone.
 - STT → **WER**.
 Promote **only** if metrics improve with no regression on a frozen regression set. Keep previous version for
