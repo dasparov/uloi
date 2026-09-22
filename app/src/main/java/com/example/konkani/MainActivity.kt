@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         store = Store(this)
-        io.execute { store.seedStarter(StarterPack.phrases) }
+        io.execute { Script.warm(); store.seedStarter(StarterPack.phrases) }
         tts = TextToSpeech(this, this)
 
         englishOutput = findViewById(R.id.englishOutput)
@@ -602,7 +602,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val cbConsent = view.findViewById<CheckBox>(R.id.fixConsent)
         val btnRecord = view.findViewById<Button>(R.id.fixRecord)
         tvContext.text = "English: $eng\nOur Konkani: $ours"
-        etCorrect.setText(ours)
+        etCorrect.setText(Script.toRoman(ours))
 
         val audioPath = arrayOfNulls<String>(1)
         val fixMeter = view.findViewById<RecordingMeter>(R.id.fixMeter)
@@ -613,7 +613,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             .setView(view)
             .setPositiveButton("Save") { _, _ ->
                 stopRecordingIfAny()
-                val confirmed = etCorrect.text.toString().trim()
+                val confirmed = Script.toDeva(etCorrect.text.toString())
                 if (!cbConsent.isChecked) {
                     Toast.makeText(this, "Consent required to save", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton

@@ -47,6 +47,7 @@ class ClipsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clips)
         store = Store(this)
+        Thread { Script.warm() }.start()
 
         findViewById<TextView>(R.id.clipsTitle).typeface = Fonts.latinMedium(this)
         findViewById<TextView>(R.id.clipsHint).typeface = Fonts.latin(this)
@@ -142,7 +143,7 @@ class ClipsActivity : AppCompatActivity() {
                     else -> {
                         store.addClip(
                             english = english,
-                            konkani = etKonkani.text.toString(),
+                            konkani = Script.toDeva(etKonkani.text.toString()),
                             audioPath = audioPath[0]!!,
                             grp = etTag.text.toString()
                         )

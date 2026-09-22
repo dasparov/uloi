@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="52dp"
+        android:hint="Correct Konkani \u2014 type it in English letters"
         android:inputType="textMultiLine"
         android:textSize="18sp"
         android:importantForAutofill="no" />

@@ -23,7 +23,10 @@ atmospheres that rotate by time-of-day and drift after each translation), Saans/
 - Konkani in **both scripts** (Romi-first toggle, equal sizes); Hindi mode swaps mic/TTS/labels/hints.
 - **Hear** + **Slow** everywhere; Konkani audio prefers a local speaker's recording.
 - **Fix it** (consent-gated corrections: typed and/or recorded) → phrase memory replays instantly
-  (on-device-proven by instrumented test) → training data for the backend.
+  (on-device-proven by instrumented test) → training data for the backend. Correction/clip text fields
+  **present and accept Romi (English letters)**: prefill is `Script.toRoman(...)`, save canonicalizes via
+  ICU `Latin-Devanagari` (`Script.toDeva`, lossless round-trip proven host-side with icu4j 74.2).
+  `Script.warm()` builds transliterators off the main thread (ICU getInstance is slow).
 - **Phrasebook** (35-phrase Bardez/Catholic starter pack, tagged `starter`, awaiting speaker gut-check).
 - **Practice** (say-it-back scoring) + **Practice 5** drill with LEARN pass → shuffled **RECAP-from-memory**
   pass → remembered-count summary.
@@ -73,7 +76,11 @@ atmospheres that rotate by time-of-day and drift after each translation), Saans/
 - Icon: original artwork, deliberately generic (no real person's likeness).
 
 ## Gotchas / notes
-- Emulator ANR seen once under host load 9+ (uiautomator storms) — not an app bug; phone is clean.
+- **Emulator ANRs under host load** (seen at load 9-21: input-focus timeouts, even "System UI isn't
+  responding") — not app bugs; the emulator is useless for input-driven verification while the Mac is
+  busy. Verify interactively on the phone. Phone was off USB at session end → **latest build (Romi
+  typing) is installed on the emulator but NOT yet on the phone**: `adb install -r KonkaniTranslator.apk`
+  on reconnect.
 - Package id still `com.example.konkani` — rename (e.g. `com.uloi.app`) **before** Play Store ($25).
 - The Konkani starter translations are best-effort seeds — first flywheel task: speaker verification
   (also gut-check the Romi spelling of "Uloi"/branding).

@@ -21,6 +21,7 @@ class PhrasebookActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phrasebook)
+        Thread { Script.warm() }.start()
 
         val store = Store(this)
         phrases = store.listPhrases()

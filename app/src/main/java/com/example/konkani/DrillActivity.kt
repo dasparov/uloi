@@ -55,6 +55,7 @@ class DrillActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drill)
+        Thread { Script.warm() }.start()
 
         val store = Store(this)
         items = store.randomPhrases(5)
