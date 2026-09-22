@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var atmoImage: ImageView
     // Cookit atmosphere washes (owner's photo-gradients): sunrise / sky / bloom / foliage
     private val atmospheres = intArrayOf(
-        R.drawable.atmo_sunrise, R.drawable.atmo_sky, R.drawable.atmo_bloom, R.drawable.atmo_foliage
+        R.drawable.atmo_sunrise, R.drawable.atmo_sky, R.drawable.atmo_foliage
     )
     private var atmoIdx = 0
 
@@ -220,8 +220,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         atmoIdx = when (java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)) {
             in 5..10 -> 0    // morning: sunrise
             in 11..16 -> 1   // day: sky
-            in 17..20 -> 2   // evening: bloom
-            else -> 3        // night: foliage
+            else -> 2        // evening/night: foliage
         }
         atmoImage.setImageResource(atmospheres[atmoIdx])
         findViewById<Button>(R.id.btnEnroll).setOnClickListener { showEnrollDialog() }
